@@ -1,325 +1,351 @@
 <!DOCTYPE html>
-<html>
+<html lang="bn">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viral Zone Video</title>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Telegram WebApp SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+        body {
+            background-color: #0b0c1b;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding-bottom: 70px;
+        }
 
-<title>Money Earn Mini App</title>
+        /* Header Card */
+        .header-card {
+            background: #18192d;
+            margin: 15px;
+            padding: 20px;
+            border-radius: 16px;
+            text-align: center;
+            border: 1px solid #23243f;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
 
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
+        .header-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: #a855f7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            letter-spacing: 0.5px;
+        }
 
-<style>
+        .header-title span {
+            color: #ff3b5c;
+        }
 
-body{
-margin:0;
-font-family:Arial,sans-serif;
-background:#f2f2f2;
-text-align:center;
-}
+        .header-subtitle {
+            color: #94a3b8;
+            font-size: 13px;
+            margin-top: 6px;
+        }
 
-.header{
-background:#0088cc;
-color:white;
-padding:20px;
-font-size:22px;
-font-weight:bold;
-}
+        /* Tab Content Section */
+        .tab-content {
+            display: none;
+            padding: 0 15px;
+            animation: fadeIn 0.3s ease;
+        }
 
-.balance{
-background:white;
-margin:15px;
-padding:25px;
-border-radius:15px;
-font-size:25px;
-font-weight:bold;
-box-shadow:0 2px 8px #ccc;
-}
+        .tab-content.active {
+            display: block;
+        }
 
-.menu{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:12px;
-padding:15px;
-}
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-button{
-padding:18px;
-border:none;
-border-radius:15px;
-background:white;
-font-size:16px;
-box-shadow:0 2px 8px #ccc;
-}
+        /* Section Titles */
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
-button:active{
-background:#0088cc;
-color:white;
-}
+        .title-pink { color: #ff3b5c; }
+        .title-purple { color: #a855f7; }
 
-.footer{
-margin-top:20px;
-color:#777;
-}
+        /* Search Box */
+        .search-container {
+            position: relative;
+            margin-bottom: 25px;
+        }
 
-</style>
+        .search-input {
+            width: 100%;
+            padding: 14px 45px 14px 18px;
+            background-color: #18192d;
+            border: 1px solid #282945;
+            border-radius: 25px;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+        }
 
+        .search-input::placeholder {
+            color: #64748b;
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 36px;
+            height: 36px;
+            background: #a855f7;
+            border: none;
+            border-radius: 50%;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        /* Loading Spinner */
+        .loading-container {
+            text-align: center;
+            padding: 40px 0;
+            color: #64748b;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .loading-spinner {
+            border: 3px solid #18192d;
+            border-top: 3px solid #a855f7;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Tutorial Card */
+        .tutorial-card {
+            background-color: #18192d;
+            border-radius: 16px;
+            padding: 15px;
+            border: 1px solid #23243f;
+        }
+
+        .video-placeholder {
+            width: 100%;
+            height: 180px;
+            background-color: #000000;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .step-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #e2e8f0;
+            font-size: 14px;
+        }
+
+        .step-number {
+            width: 26px;
+            height: 26px;
+            background-color: #262744;
+            color: #a855f7;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #121324;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0 6px 0;
+            border-top: 1px solid #1e1f38;
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: #64748b;
+            text-decoration: none;
+            font-size: 11px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            width: 25%;
+            position: relative;
+        }
+
+        .nav-item i {
+            font-size: 18px;
+        }
+
+        .nav-item.active {
+            color: #ff3b5c;
+        }
+
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            width: 4px;
+            height: 4px;
+            background-color: #ff3b5c;
+            border-radius: 50%;
+        }
+    </style>
 </head>
-
-
 <body>
 
-
-<div class="header">
-💰 Money Earn Mini App
-</div>
-
-
-<div class="balance">
-
-💰 Balance <br>
-
-<span id="money">0</span> টাকা
-
-</div>
-
-
-
-<div class="menu">
-
-
-<button onclick="home()">
-🏠 Home
-</button>
-
-
-<button onclick="profile()">
-👤 Profile
-</button>
-
-
-<button onclick="balance()">
-💰 Balance
-</button>
-
-
-<button onclick="ads()">
-📺 Watch Ads
-<br>
-(Monetag)
-</button>
-
-
-<button onclick="bonus()">
-🎁 Daily Bonus
-</button>
-
-
-<button onclick="referral()">
-👥 Referral
-</button>
-
-
-<button onclick="tasks()">
-📋 Tasks
-</button>
-
-
-<button onclick="withdraw()">
-💸 Withdraw
-</button>
-
-
-<button onclick="admin()">
-⚙️ Admin Panel
-</button>
-
-
-</div>
-
-
-
-<div class="footer">
-
-Powered By Telegram Mini App
-
-</div>
-
-
-
-
-<script>
-
-
-let money = 0;
-
-
-
-function home(){
-
-alert("🏠 Welcome Home");
-
-}
-
-
-
-function profile(){
-
-alert("👤 User Profile");
-
-}
-
-
-
-function balance(){
-
-alert("💰 Your Balance: "+money+" টাকা");
-
-}
-
-
-
-function ads(){
-
-alert("📺 Watch Ads Opened");
-
-// Monetag এখানে যুক্ত করবেন
-
-money += 10;
-
-document.getElementById("money").innerHTML = money;
-
-alert("✅ 10 টাকা যোগ হয়েছে");
-
-}
-
-
-
-
-function bonus(){
-
-money += 50;
-
-document.getElementById("money").innerHTML = money;
-
-alert("🎁 Daily Bonus 50 টাকা পেয়েছেন");
-
-}
-
-
-
-
-
-function referral(){
-
-alert("👥 Referral Link তৈরি হয়েছে");
-
-}
-
-
-
-
-
-function tasks(){
-
-alert("📋 Tasks Complete করে টাকা আয় করুন");
-
-}
-
-
-
-
-function withdraw(){
-
-
-let method = prompt(
-"💸 Withdraw Method নির্বাচন করুন:\n\n"+
-"1. বিকাশ\n"+
-"2. নগদ\n"+
-"3. রকেট"
-);
-
-
-
-if(method){
-
-
-let number = prompt(
-"📱 আপনার মোবাইল নাম্বার লিখুন"
-);
-
-
-
-let amount = prompt(
-"💰 Withdraw Amount লিখুন\n\nMinimum Withdraw: 1000 টাকা"
-);
-
-
-
-if(amount < 1000){
-
-
-alert(
-"❌ Minimum Withdraw 1000 টাকা"
-);
-
-
-}
-
-else if(amount > money){
-
-
-alert(
-"❌ আপনার Balance পর্যাপ্ত নয়"
-);
-
-
-}
-
-else{
-
-
-money = money - amount;
-
-document.getElementById("money").innerHTML = money;
-
-
-alert(
-"✅ Withdraw Request Submitted\n\n"+
-"Method: "+method+
-"\nNumber: "+number+
-"\nAmount: "+amount+" টাকা"
-);
-
-
-}
-
-
-}
-
-
-}
-
-
-
-
-function admin(){
-
-alert("⚙️ Admin Panel");
-
-}
-
-
-
-
-// Telegram Mini App
-
-let tg = window.Telegram.WebApp;
-
-tg.expand();
-
-
-</script>
-
-
+    <!-- Top Card -->
+    <div class="header-card">
+        <div class="header-title">
+            VIRAL ZONE VIDEO <i class="fa-solid fa-fire title-pink"></i>
+        </div>
+        <div class="header-subtitle">Exclusive Premium Video</div>
+    </div>
+
+    <!-- 1. HOME TAB -->
+    <div id="home-tab" class="tab-content active">
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="ভিডিও খুঁজুন...">
+            <button class="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </div>
+        <div class="loading-container">
+            <div class="loading-spinner"></div>
+            Loading...
+        </div>
+    </div>
+
+    <!-- 2. FAVORITE TAB -->
+    <div id="favorite-tab" class="tab-content">
+        <div class="section-title title-pink">
+            <i class="fa-solid fa-heart"></i> পছন্দের ভিডিও
+        </div>
+        <!-- পছন্দের ভিডিওগুলোর লিস্ট এখানে থাকবে -->
+    </div>
+
+    <!-- 3. TUTORIAL TAB -->
+    <div id="tutorial-tab" class="tab-content">
+        <div class="section-title title-purple">
+            <i class="fa-solid fa-video"></i> টিউটোরিয়াল
+        </div>
+        <div class="tutorial-card">
+            <div class="video-placeholder"></div>
+            <div class="step-list">
+                <div class="step-item">
+                    <span class="step-number">১</span>
+                    <span>UNLOCK বাটনে ক্লিক করুন।</span>
+                </div>
+                <div class="step-item">
+                    <span class="step-number">২</span>
+                    <span>৩টি অ্যাড আসবে, ওই অ্যাড গুলো সম্পূর্ণভাবে দেখুন।</span>
+                </div>
+                <div class="step-item">
+                    <span class="step-number">৩</span>
+                    <span>শেষে ৫ সেকেন্ড অপেক্ষা করলে আনলক হবে।</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. LINKS TAB -->
+    <div id="links-tab" class="tab-content">
+        <div class="section-title title-purple">
+            <i class="fa-solid fa-link"></i> প্রয়োজনীয় লিংক
+        </div>
+        <!-- লিংক বা বাটনগুলো এখানে যুক্ত করতে পারেন -->
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <div class="bottom-nav">
+        <button class="nav-item active" onclick="switchTab('home-tab', this)">
+            <i class="fa-solid fa-house"></i>
+            <span>হোম</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('favorite-tab', this)">
+            <i class="fa-solid fa-heart"></i>
+            <span>পছন্দ</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('tutorial-tab', this)">
+            <i class="fa-solid fa-book-open"></i>
+            <span>টিউটোরিয়াল</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('links-tab', this)">
+            <i class="fa-solid fa-link"></i>
+            <span>লিংক</span>
+        </button>
+    </div>
+
+    <script>
+        // Initialize Telegram WebApp
+        if (window.Telegram && window.Telegram.WebApp) {
+            window.Telegram.WebApp.ready();
+            window.Telegram.WebApp.expand();
+        }
+
+        // Tab Switching Logic
+        function switchTab(tabId, element) {
+            // Hide all tab contents
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+
+            // Remove active class from all nav items
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => item.classList.remove('active'));
+
+            // Show current tab & set active state
+            document.getElementById(tabId).classList.add('active');
+            element.classList.add('active');
+        }
+    </script>
 </body>
 </html>
