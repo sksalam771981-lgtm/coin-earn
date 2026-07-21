@@ -15,115 +15,75 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background-color: #0b0c1b; color: #ffffff; display: flex; flex-direction: column; min-height: 100vh; padding-bottom: 75px; }
         
-        /* Header Banner */
-        .header-card { background: #18192d; margin: 15px; padding: 20px; border-radius: 16px; text-align: center; border: 1px solid #23243f; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); }
-        .header-title { font-size: 22px; font-weight: 800; color: #a855f7; display: flex; align-items: center; justify-content: center; gap: 6px; letter-spacing: 0.5px; }
+        .header-card { background: #18192d; margin: 15px; padding: 20px; border-radius: 16px; text-align: center; border: 1px solid #23243f; }
+        .header-title { font-size: 22px; font-weight: 800; color: #a855f7; display: flex; align-items: center; justify-content: center; gap: 6px; }
         .header-subtitle { color: #94a3b8; font-size: 13px; margin-top: 6px; }
 
-        /* Tabs logic */
-        .tab-content { display: none; padding: 0 15px; animation: fadeIn 0.2s ease; }
+        .tab-content { display: none; padding: 0 15px; }
         .tab-content.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 
-        .section-title { font-size: 18px; font-weight: 700; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
-        .title-pink { color: #ff3b5c; }
-        .title-purple { color: #a855f7; }
-
-        /* Search Box */
         .search-container { position: relative; margin-bottom: 20px; }
         .search-input { width: 100%; padding: 14px 45px 14px 18px; background-color: #18192d; border: 1px solid #282945; border-radius: 25px; color: #fff; font-size: 14px; outline: none; }
-        .search-input::placeholder { color: #64748b; }
-        .search-btn { position: absolute; right: 5px; top: 50%; transform: translateY(-50%); width: 36px; height: 36px; background: #a855f7; border: none; border-radius: 50%; color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .search-btn { position: absolute; right: 5px; top: 50%; transform: translateY(-50%); width: 36px; height: 36px; background: #a855f7; border: none; border-radius: 50%; color: #fff; display: flex; align-items: center; justify-content: center; }
 
-        /* Video Cards */
-        .video-card { background-color: #18192d; border: 1px solid #23243f; border-radius: 16px; overflow: hidden; margin-bottom: 15px; }
-        .video-card iframe { width: 100%; height: 210px; border: none; }
-        .video-info { padding: 12px 15px; }
-        .video-title-text { font-size: 15px; font-weight: 600; color: #f8fafc; }
+        /* Video Post Cards (Clickable) */
+        .post-card { background-color: #18192d; border: 1px solid #23243f; border-radius: 16px; padding: 15px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: 0.2s; }
+        .post-card:active { background-color: #23243f; }
+        .post-info { display: flex; align-items: center; gap: 12px; }
+        .play-icon { width: 40px; height: 40px; background: #a855f7; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; flex-shrink: 0; }
+        .post-title { font-size: 15px; font-weight: 600; color: #f8fafc; }
 
-        .loading-container { text-align: center; padding: 40px 0; color: #64748b; font-size: 15px; display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .loading-spinner { border: 3px solid #18192d; border-top: 3px solid #a855f7; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        /* Video Detail / Player Page (Second Page) */
+        #video-player-page { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0b0c1b; z-index: 2000; padding: 15px; overflow-y: auto; }
+        .back-btn { background: #18192d; border: 1px solid #23243f; color: #fff; padding: 10px 16px; border-radius: 20px; cursor: pointer; margin-bottom: 15px; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; }
+        .player-container { width: 100%; height: 250px; background: #000; border-radius: 12px; overflow: hidden; margin-bottom: 15px; }
+        .player-container iframe { width: 100%; height: 100%; border: none; }
+        .player-title { font-size: 18px; font-weight: bold; color: #fff; }
 
-        /* Tutorial Card */
-        .tutorial-card { background-color: #18192d; border-radius: 16px; padding: 15px; border: 1px solid #23243f; }
-        .video-placeholder { width: 100%; height: 180px; background-color: #000000; border-radius: 12px; margin-bottom: 20px; }
-        .step-list { display: flex; flex-direction: column; gap: 15px; }
-        .step-item { display: flex; align-items: center; gap: 12px; color: #e2e8f0; font-size: 14px; }
-        .step-number { width: 26px; height: 26px; background-color: #262744; color: #a855f7; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: bold; flex-shrink: 0; }
-
-        /* Links Card */
-        .link-card { background-color: #18192d; border: 1px solid #23243f; border-radius: 12px; padding: 15px; color: #94a3b8; text-align: center; }
-
-        /* Bottom Nav Bar */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background-color: #121324; display: flex; justify-content: space-around; padding: 10px 0 6px 0; border-top: 1px solid #1e1f38; z-index: 1000; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: #64748b; text-decoration: none; font-size: 11px; cursor: pointer; background: none; border: none; width: 25%; position: relative; }
-        .nav-item i { font-size: 18px; }
+        .loading-container { text-align: center; padding: 40px 0; color: #64748b; }
+        
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background-color: #121324; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #1e1f38; z-index: 1000; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: #64748b; background: none; border: none; width: 25%; font-size: 11px; }
         .nav-item.active { color: #ff3b5c; }
-        .nav-item.active::after { content: ''; position: absolute; bottom: -6px; width: 4px; height: 4px; background-color: #ff3b5c; border-radius: 50%; }
     </style>
 </head>
 <body>
 
     <!-- Header Section -->
     <div class="header-card">
-        <div class="header-title">VIRAL ZONE VIDEO <i class="fa-solid fa-fire title-pink"></i></div>
+        <div class="header-title">VIRAL ZONE VIDEO <i class="fa-solid fa-fire" style="color:#ff3b5c;"></i></div>
         <div class="header-subtitle">Exclusive Premium Video</div>
     </div>
 
-    <!-- 1. HOME TAB -->
+    <!-- HOME TAB -->
     <div id="home-tab" class="tab-content active">
         <div class="search-container">
             <input type="text" id="search-input" class="search-input" placeholder="ভিডিও খুঁজুন..." onkeyup="filterVideos()">
             <button class="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
         </div>
-        
         <div id="video-list-container">
-            <div class="loading-container">
-                <div class="loading-spinner"></div> Loading...
-            </div>
+            <div class="loading-container">Loading...</div>
         </div>
     </div>
 
-    <!-- 2. FAVORITE TAB -->
-    <div id="favorite-tab" class="tab-content">
-        <div class="section-title title-pink"><i class="fa-solid fa-heart"></i> পছন্দের ভিডিও</div>
-        <div style="text-align: center; color: #64748b; margin-top: 30px;">
-            কোনো পছন্দের ভিডিও সেভ করা নেই।
+    <!-- SECOND PAGE: VIDEO PLAYER VIEW -->
+    <div id="video-player-page">
+        <button class="back-btn" onclick="closePlayer()"><i class="fa-solid fa-arrow-left"></i> পেছনে যান</button>
+        <div class="player-container">
+            <iframe id="main-iframe" src="" allowfullscreen></iframe>
         </div>
-    </div>
-
-    <!-- 3. TUTORIAL TAB -->
-    <div id="tutorial-tab" class="tab-content">
-        <div class="section-title title-purple"><i class="fa-solid fa-video"></i> টিউটোরিয়াল</div>
-        <div class="tutorial-card">
-            <div class="video-placeholder"></div>
-            <div class="step-list">
-                <div class="step-item"><span class="step-number">১</span><span>UNLOCK বাটনে ক্লিক করুন।</span></div>
-                <div class="step-item"><span class="step-number">২</span><span>৩টি অ্যাড আসবে, ওই অ্যাড গুলো সম্পূর্ণভাবে দেখুন।</span></div>
-                <div class="step-item"><span class="step-number">৩</span><span>শেষে ৫ সেকেন্ড অপেক্ষা করলে আনলক হবে।</span></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 4. LINKS TAB -->
-    <div id="links-tab" class="tab-content">
-        <div class="section-title title-purple"><i class="fa-solid fa-link"></i> প্রয়োজনীয় লিংক</div>
-        <div class="link-card">
-            <p>নতুন লিংক শীঘ্রই যুক্ত করা হবে।</p>
-        </div>
+        <div class="player-title" id="main-title"></div>
     </div>
 
     <!-- Bottom Navigation -->
     <div class="bottom-nav">
-        <button class="nav-item active" onclick="switchTab('home-tab', this)"><i class="fa-solid fa-house"></i><span>হোম</span></button>
-        <button class="nav-item" onclick="switchTab('favorite-tab', this)"><i class="fa-solid fa-heart"></i><span>পছন্দ</span></button>
-        <button class="nav-item" onclick="switchTab('tutorial-tab', this)"><i class="fa-solid fa-book-open"></i><span>টিউটোরিয়াল</span></button>
-        <button class="nav-item" onclick="switchTab('links-tab', this)"><i class="fa-solid fa-link"></i><span>লিংক</span></button>
+        <button class="nav-item active"><i class="fa-solid fa-house"></i><span>হোম</span></button>
+        <button class="nav-item"><i class="fa-solid fa-heart"></i><span>পছন্দ</span></button>
+        <button class="nav-item"><i class="fa-solid fa-book-open"></i><span>টিউটোরিয়াল</span></button>
+        <button class="nav-item"><i class="fa-solid fa-link"></i><span>লিংক</span></button>
     </div>
 
     <script>
-        // Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyCtKYGQ-fvuVifuDNJ_tlNmKJ2gjEqyYWU",
             authDomain: "viralzone-3e974.firebaseapp.com",
@@ -137,67 +97,58 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        if (window.Telegram && window.Telegram.WebApp) {
-            window.Telegram.WebApp.ready();
-            window.Telegram.WebApp.expand();
-        }
-
-        // Tab Switcher
-        function switchTab(tabId, element) {
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            element.classList.add('active');
-        }
-
         let allVideos = [];
 
-        // Realtime Data Fetching
         database.ref('videos').on('value', (snapshot) => {
-            const container = document.getElementById('video-list-container');
-            container.innerHTML = '';
             allVideos = [];
-
             if(!snapshot.exists()) {
-                container.innerHTML = '<p style="text-align:center; color:#64748b; margin-top:30px;">কোনো ভিডিও পাওয়া যায়নি।</p>';
+                document.getElementById('video-list-container').innerHTML = '<p style="text-align:center; color:#64748b;">কোনো পোস্ট পাওয়া যায়নি।</p>';
                 return;
             }
 
             snapshot.forEach((childSnapshot) => {
-                const video = childSnapshot.val();
-                allVideos.push(video);
+                allVideos.push(childSnapshot.val());
             });
 
-            renderVideos(allVideos);
+            renderPosts(allVideos);
         });
 
-        function renderVideos(videos) {
+        function renderPosts(videos) {
             const container = document.getElementById('video-list-container');
             container.innerHTML = '';
 
-            if(videos.length === 0) {
-                container.innerHTML = '<p style="text-align:center; color:#64748b; margin-top:30px;">কোনো ম্যাচিং ভিডিও নেই।</p>';
-                return;
-            }
-
             videos.reverse().forEach((video) => {
                 const card = document.createElement('div');
-                card.className = 'video-card';
+                card.className = 'post-card';
+                card.onclick = () => openPlayer(video.title, video.url);
                 card.innerHTML = `
-                    <iframe src="${video.url}" allowfullscreen></iframe>
-                    <div class="video-info">
-                        <div class="video-title-text">${video.title}</div>
+                    <div class="post-info">
+                        <div class="play-icon"><i class="fa-solid fa-play"></i></div>
+                        <div class="post-title">${video.title}</div>
                     </div>
+                    <i class="fa-solid fa-chevron-right" style="color:#64748b;"></i>
                 `;
                 container.appendChild(card);
             });
         }
 
-        // Search Filter Logic
+        // Open Second Page Player
+        function openPlayer(title, url) {
+            document.getElementById('main-iframe').src = url;
+            document.getElementById('main-title').innerText = title;
+            document.getElementById('video-player-page').style.display = 'block';
+        }
+
+        // Close Second Page Player
+        function closePlayer() {
+            document.getElementById('main-iframe').src = '';
+            document.getElementById('video-player-page').style.display = 'none';
+        }
+
         function filterVideos() {
             const query = document.getElementById('search-input').value.toLowerCase();
             const filtered = allVideos.filter(v => v.title.toLowerCase().includes(query));
-            renderVideos(filtered);
+                renderPosts(filtered);
         }
     </script>
 </body>
