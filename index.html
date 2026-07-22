@@ -3,62 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Viral Zone Video</title>
+    <title>Viral Zone</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Telegram & Firebase SDKs -->
+    <!-- SDKs -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-    
-    <!-- Adsgram Monetization Script -->
     <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background-color: #0b0c1b; color: #ffffff; padding-bottom: 75px; }
         
-        /* Header Banner */
-        .header-card { background: #18192d; margin: 15px; padding: 20px; border-radius: 16px; text-align: center; border: 1px solid #23243f; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-        .header-title { font-size: 22px; font-weight: 800; color: #a855f7; display: flex; align-items: center; justify-content: center; gap: 6px; }
-        .header-subtitle { color: #94a3b8; font-size: 13px; margin-top: 6px; }
+        /* Top Banner */
+        .header-card { background: #121324; margin: 12px; padding: 18px; border-radius: 16px; text-align: center; border: 1px solid #1e1f38; }
+        .header-title { font-size: 20px; font-weight: 800; color: #a855f7; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .header-subtitle { color: #64748b; font-size: 12px; margin-top: 4px; }
 
-        /* Search & Categories */
-        .search-container { position: relative; margin: 0 15px 15px 15px; }
-        .search-input { width: 100%; padding: 12px 40px 12px 15px; background-color: #18192d; border: 1px solid #282945; border-radius: 20px; color: #fff; font-size: 14px; outline: none; }
-        .search-btn { position: absolute; right: 5px; top: 50%; transform: translateY(-50%); width: 32px; height: 32px; background: #a855f7; border: none; border-radius: 50%; color: #fff; cursor: pointer; }
+        /* Search Box */
+        .search-container { position: relative; margin: 0 12px 12px 12px; }
+        .search-input { width: 100%; padding: 12px 40px 12px 15px; background-color: #121324; border: 1px solid #1e1f38; border-radius: 20px; color: #fff; font-size: 13px; outline: none; }
+        .search-input::placeholder { color: #64748b; }
+        .search-btn { position: absolute; right: 5px; top: 50%; transform: translateY(-50%); width: 30px; height: 30px; background: #a855f7; border: none; border-radius: 50%; color: #fff; display: flex; align-items: center; justify-content: center; }
 
-        .category-bar { display: flex; gap: 10px; overflow-x: auto; padding: 0 15px 15px 15px; scrollbar-width: none; }
-        .category-btn { background: #18192d; border: 1px solid #282945; color: #94a3b8; padding: 8px 16px; border-radius: 20px; font-size: 13px; white-space: nowrap; cursor: pointer; }
-        .category-btn.active { background: #a855f7; color: #fff; border-color: #a855f7; }
+        /* Category Badges */
+        .category-bar { display: flex; gap: 8px; padding: 0 12px 12px 12px; overflow-x: auto; scrollbar-width: none; }
+        .category-btn { background: #121324; border: 1px solid #1e1f38; color: #94a3b8; padding: 6px 14px; border-radius: 15px; font-size: 12px; white-space: nowrap; cursor: pointer; }
+        .category-btn.active { background: #ff3b5c; color: #fff; border-color: #ff3b5c; }
 
-        /* Tabs Logic */
-        .tab-content { display: none; padding: 0 15px; }
+        .tab-content { display: none; padding: 0 12px; }
         .tab-content.active { display: block; }
 
-        /* Post & Video Cards */
-        .post-card { background: #18192d; border: 1px solid #23243f; border-radius: 16px; overflow: hidden; margin-bottom: 15px; position: relative; }
-        .thumb-box { position: relative; width: 100%; height: 200px; background: #000; }
+        /* Card Design - Screenshot Exact Replica */
+        .post-card { background: #121324; border: 1px solid #1e1f38; border-radius: 16px; overflow: hidden; margin-bottom: 16px; position: relative; }
+        .thumb-box { position: relative; width: 100%; height: 210px; background: #18192d; }
         .thumb-img { width: 100%; height: 100%; object-fit: cover; }
-        .badge-ads { position: absolute; top: 10px; right: 10px; background: rgba(255, 59, 92, 0.9); color: #fff; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: bold; }
-        .post-body { padding: 14px; }
-        .post-title { font-size: 15px; font-weight: 600; color: #f8fafc; margin-bottom: 12px; }
-        .btn-unlock { width: 100%; padding: 12px; background: linear-gradient(90deg, #a855f7, #ff3b5c); border: none; border-radius: 10px; color: #fff; font-weight: bold; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        
+        .fav-icon { position: absolute; top: 12px; right: 12px; width: 32px; height: 32px; background: rgba(0,0,0,0.4); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; }
+        
+        .post-meta { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px 6px 14px; }
+        .post-title { font-size: 15px; font-weight: 600; color: #f8fafc; }
+        .view-count { font-size: 12px; color: #94a3b8; display: flex; align-items: center; gap: 4px; }
 
-        /* Full Page Video Player Modal (Second Page) */
-        #player-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0b0c1b; z-index: 2000; padding: 15px; overflow-y: auto; }
-        .back-btn { background: #18192d; border: 1px solid #23243f; color: #fff; padding: 8px 16px; border-radius: 20px; margin-bottom: 15px; cursor: pointer; font-size: 14px; }
-        .iframe-box { width: 100%; height: 240px; background: #000; border-radius: 12px; overflow: hidden; border: 1px solid #23243f; }
+        .action-row { display: flex; gap: 8px; padding: 6px 14px 14px 14px; }
+        .btn-unlock { flex: 1; padding: 12px; background: linear-gradient(90deg, #a855f7, #ff3b5c); border: none; border-radius: 10px; color: #fff; font-weight: bold; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 10px rgba(255, 59, 92, 0.2); }
+        .btn-share { width: 42px; background: #1e1f38; border: 1px solid #282945; border-radius: 10px; color: #a855f7; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 15px; }
+
+        /* Full Player Overlay */
+        #player-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0b0c1b; z-index: 2000; padding: 15px; }
+        .back-btn { background: #121324; border: 1px solid #1e1f38; color: #fff; padding: 8px 16px; border-radius: 20px; margin-bottom: 15px; cursor: pointer; }
+        .iframe-box { width: 100%; height: 240px; background: #000; border-radius: 12px; overflow: hidden; }
         .iframe-box iframe { width: 100%; height: 100%; border: none; }
 
-        /* Tutorial Card */
-        .tutorial-card { background-color: #18192d; border-radius: 16px; padding: 15px; border: 1px solid #23243f; }
-        .step-list { display: flex; flex-direction: column; gap: 15px; margin-top: 15px; }
-        .step-item { display: flex; align-items: center; gap: 12px; color: #e2e8f0; font-size: 14px; }
-        .step-number { width: 26px; height: 26px; background-color: #262744; color: #a855f7; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: bold; flex-shrink: 0; }
-
-        /* Bottom Nav */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background-color: #121324; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #1e1f38; z-index: 1000; }
+        /* Bottom Nav Bar */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background-color: #121324; display: flex; justify-content: space-around; padding: 10px 0 6px 0; border-top: 1px solid #1e1f38; z-index: 1000; }
         .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: #64748b; background: none; border: none; width: 25%; font-size: 11px; cursor: pointer; }
         .nav-item.active { color: #ff3b5c; }
     </style>
@@ -73,9 +72,8 @@
 
     <!-- Category Scroll Bar -->
     <div class="category-bar">
-        <button class="category-btn active" onclick="filterCategory('all', this)">সবগুলো</button>
-        <button class="category-btn" onclick="filterCategory('viral', this)">ভাইরাল কন্টেন্ট</button>
-        <button class="category-btn" onclick="filterCategory('natok', this)">নাটক / মুভি</button>
+        <button class="category-btn active" onclick="filterCategory('all', this)">All</button>
+        <button class="category-btn" onclick="filterCategory('viral', this)">VIRAL</button>
     </div>
 
     <!-- 1. HOME TAB -->
@@ -84,44 +82,41 @@
             <input type="text" id="search-input" class="search-input" placeholder="ভিডিও খুঁজুন..." onkeyup="filterVideos()">
             <button class="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
         </div>
+
         <div id="video-list-container">
-            <p style="text-align:center; color:#64748b; padding:30px 0;">লোড হচ্ছে...</p>
+            <p style="text-align:center; color:#64748b; padding:20px 0;">লোড হচ্ছে...</p>
         </div>
     </div>
 
     <!-- 2. FAVORITE TAB -->
     <div id="favorite-tab" class="tab-content">
-        <h3 style="color:#ff3b5c; margin-bottom:15px;"><i class="fa-solid fa-heart"></i> পছন্দের ভিডিও</h3>
-        <p style="text-align:center; color:#64748b; margin-top:30px;">কোনো পছন্দের পোস্ট সেভ করা নেই।</p>
+        <h4 style="color:#ff3b5c; margin-bottom:12px;"><i class="fa-solid fa-heart"></i> পছন্দের ভিডিও</h4>
+        <p style="text-align:center; color:#64748b; margin-top:20px;">কোনো ভিডিও সেভ নেই।</p>
     </div>
 
     <!-- 3. TUTORIAL TAB -->
     <div id="tutorial-tab" class="tab-content">
-        <h3 style="color:#a855f7; margin-bottom:15px;"><i class="fa-solid fa-book-open"></i> টিউটোরিয়াল</h3>
-        <div class="tutorial-card">
-            <div class="step-list">
-                <div class="step-item"><span class="step-number">১</span><span>UNLOCK বাটনে ক্লিক করুন।</span></div>
-                <div class="step-item"><span class="step-number">২</span><span>বিজ্ঞাপন বা অ্যাড সম্পূর্ণভাবে দেখুন।</span></div>
-                <div class="step-item"><span class="step-number">৩</span><span>বিজ্ঞাপন শেষে অটোমেটিক ফুল ভিডিও প্লে হবে।</span></div>
-            </div>
+        <h4 style="color:#a855f7; margin-bottom:12px;"><i class="fa-solid fa-book-open"></i> টিউটোরিয়াল</h4>
+        <div style="background:#121324; padding:15px; border-radius:12px; border:1px solid #1e1f38; color:#e2e8f0; font-size:13px;">
+            <p>১. UNLOCK বাটনে চাপ দিন।</p><br>
+            <p>২. অ্যাডটি সম্পূর্ণ দেখুন।</p><br>
+            <p>৩. ভিডিওটি অটোমেটিক আনলক হয়ে যাবে।</p>
         </div>
     </div>
 
     <!-- 4. LINKS TAB -->
     <div id="links-tab" class="tab-content">
-        <h3 style="color:#a855f7; margin-bottom:15px;"><i class="fa-solid fa-link"></i> প্রয়োজনীয় লিংক</h3>
-        <div class="tutorial-card" style="text-align:center; color:#94a3b8;">
-            <p>নতুন লিংক শীঘ্রই প্রকাশ করা হবে।</p>
-        </div>
+        <h4 style="color:#a855f7; margin-bottom:12px;"><i class="fa-solid fa-link"></i> প্রয়োজনীয় লিংক</h4>
+        <p style="text-align:center; color:#64748b; margin-top:20px;">শীঘ্রই যুক্ত হবে।</p>
     </div>
 
-    <!-- SECOND PAGE / PLAYER OVERLAY -->
+    <!-- PLAYER OVERLAY VIEW -->
     <div id="player-modal">
         <button class="back-btn" onclick="closePlayer()"><i class="fa-solid fa-arrow-left"></i> পেছনে যান</button>
         <div class="iframe-box">
             <iframe id="main-player" src="" allowfullscreen></iframe>
         </div>
-        <h3 id="player-title" style="margin-top:15px; color:#fff;"></h3>
+        <h3 id="player-title" style="margin-top:15px; font-size:16px;"></h3>
     </div>
 
     <!-- Bottom Nav Bar -->
@@ -133,7 +128,6 @@
     </div>
 
     <script>
-        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyCtKYGQ-fvuVifuDNJ_tlNmKJ2gjEqyYWU",
             authDomain: "viralzone-3e974.firebaseapp.com",
@@ -153,16 +147,21 @@
         }
 
         let allVideos = [];
-        let adsgramBlockId = ""; // Firebase থেকে লাইভ ডাউনলোড হবে
+        let adsgramBlockId = "";
 
-        // Realtime Data Sync
+        // Fetch Ads Config
+        database.ref('ad_config/adsgram_id').on('value', (s) => {
+            if(s.exists()) adsgramBlockId = s.val();
+        });
+
+        // Fetch Videos
         database.ref('videos').on('value', (snapshot) => {
             const container = document.getElementById('video-list-container');
             container.innerHTML = '';
             allVideos = [];
 
             if(!snapshot.exists()) {
-                container.innerHTML = '<p style="text-align:center; color:#64748b; margin-top:20px;">কোনো পোস্ট পাওয়া যায়নি।</p>';
+                container.innerHTML = '<p style="text-align:center; color:#64748b; margin-top:20px;">কোনো ভিডিও পাওয়া যায়নি।</p>';
                 return;
             }
 
@@ -170,15 +169,10 @@
                 allVideos.push(childSnapshot.val());
             });
 
-            renderVideos(allVideos);
+            renderPosts(allVideos);
         });
 
-        // Adsgram Block ID Sync
-        database.ref('ad_config/adsgram_id').on('value', (snapshot) => {
-            if(snapshot.exists()) adsgramBlockId = snapshot.val();
-        });
-
-        function renderVideos(videos) {
+        function renderPosts(videos) {
             const container = document.getElementById('video-list-container');
             container.innerHTML = '';
 
@@ -188,27 +182,30 @@
                 card.innerHTML = `
                     <div class="thumb-box">
                         <img class="thumb-img" src="${video.thumb || 'https://via.placeholder.com/400x200'}" alt="thumb">
-                        <span class="badge-ads"><i class="fa-solid fa-lock"></i> ${video.adsCount || 1} Ads</span>
+                        <div class="fav-icon"><i class="fa-regular fa-heart"></i></div>
                     </div>
-                    <div class="post-body">
+                    <div class="post-meta">
                         <div class="post-title">${video.title}</div>
-                        <button class="btn-unlock" onclick="unlockContent('${video.title}', '${video.url}')">
-                            <i class="fa-solid fa-play"></i> আনলক করে ভিডিও দেখুন
+                        <div class="view-count"><i class="fa-regular fa-eye"></i> ${video.views || 0}</div>
+                    </div>
+                    <div class="action-row">
+                        <button class="btn-unlock" onclick="triggerUnlock('${video.title}', '${video.url}')">
+                            <i class="fa-solid fa-play"></i> UNLOCK (0/${video.adsCount || 4})
                         </button>
+                        <button class="btn-share" onclick="copyLink('${video.url}')"><i class="fa-solid fa-link"></i></button>
                     </div>
                 `;
                 container.appendChild(card);
             });
         }
 
-        // Adsgram Monetization Trigger
-        function unlockContent(title, url) {
+        function triggerUnlock(title, url) {
             if (typeof Adsgram !== 'undefined' && adsgramBlockId !== "") {
                 const AdController = Adsgram.init({ blockId: adsgramBlockId });
-                AdController.show().then((result) => {
+                AdController.show().then(() => {
                     openPlayer(title, url);
-                }).catch((result) => {
-                    openPlayer(title, url); // Fallback
+                }).catch(() => {
+                    openPlayer(title, url);
                 });
             } else {
                 openPlayer(title, url);
@@ -233,20 +230,25 @@
             element.classList.add('active');
         }
 
+        function copyLink(url) {
+            navigator.clipboard.writeText(url);
+            alert("লিংক কপি করা হয়েছে!");
+        }
+
         function filterVideos() {
             const query = document.getElementById('search-input').value.toLowerCase();
             const filtered = allVideos.filter(v => v.title.toLowerCase().includes(query));
-            renderVideos(filtered);
+            renderPosts(filtered);
         }
 
         function filterCategory(cat, element) {
             document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
             element.classList.add('active');
             if(cat === 'all') {
-                renderVideos(allVideos);
+                renderPosts(allVideos);
             } else {
                 const filtered = allVideos.filter(v => v.category === cat);
-                renderVideos(filtered);
+                renderPosts(filtered);
             }
         }
     </script>
