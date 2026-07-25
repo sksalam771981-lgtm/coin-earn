@@ -3,179 +3,301 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Super Admin Panel</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    
+    <title>CineBD HD - Admin Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --primary: #8b5cf6; --bg: #0f0f23; --card: #1e1e30; --text: #fff; }
-        body { font-family: sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 15px; }
-        .container { max-width: 600px; margin: 0 auto; }
-        h2 { text-align: center; color: #d8b4fe; margin-bottom: 20px; }
-        .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .dash-btn { background: var(--card); border: 1px solid #333; padding: 20px; border-radius: 15px; text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 10px; }
-        .dash-btn i { font-size: 28px; color: var(--primary); }
-        .section { display: none; }
-        .section.active { display: block; }
-        .header-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 10px; }
-        .back-btn { background: none; border: none; color: white; font-size: 18px; cursor: pointer; }
-        input, select, textarea { width: 100%; padding: 14px; margin-bottom: 10px; background: #151525; border: 1px solid #444; color: white; border-radius: 8px; box-sizing: border-box; }
-        .action-btn { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; }
-        .list-item { background: var(--card); padding: 12px; margin-top: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
-        .del-btn { background: #ef4444; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
-        .help-text { font-size: 12px; color: #9ca3af; margin-bottom: 5px; display: block; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: #0f0f0f; color: #fff; min-height: 100vh; padding: 20px; }
+        
+        .container { max-width: 850px; margin: 0 auto; background: #181818; padding: 25px; border-radius: 8px; border: 1px solid #333; }
+        h2 { color: #e50914; margin-bottom: 20px; text-align: center; }
+        
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-size: 0.9rem; color: #ccc; }
+        input, select { width: 100%; padding: 10px; background: #222; border: 1px solid #444; color: #fff; border-radius: 4px; font-size: 0.9rem; outline: none; }
+        input:focus, select:focus { border-color: #e50914; }
+        
+        .btn { background: #e50914; color: #fff; border: none; padding: 10px 20px; font-size: 1rem; font-weight: bold; border-radius: 4px; cursor: pointer; width: 100%; transition: 0.2s; }
+        .btn:hover { background: #b80710; }
+        
+        .section-box { background: #141414; padding: 20px; border-radius: 6px; margin-bottom: 25px; border: 1px solid #222; }
+        .section-title { font-size: 1.1rem; color: #e50914; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 5px; }
+        
+        .success-msg { color: #2ecc71; margin-top: 10px; text-align: center; font-weight: bold; }
+        .error-msg { color: #e50914; margin-top: 10px; text-align: center; font-weight: bold; }
+        .row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .home-btn { background: #333; color: #fff; text-decoration: none; padding: 8px 15px; border-radius: 4px; font-size: 0.85rem; display: inline-block; margin-bottom: 15px; }
+        .home-btn:hover { background: #444; }
+
+        .item-list { max-height: 200px; overflow-y: auto; background: #1c1c1c; padding: 10px; border-radius: 4px; border: 1px solid #333; margin-top: 10px; }
+        .item-row { display: flex; justify-content: space-between; align-items: center; padding: 8px; border-bottom: 1px solid #2a2a2a; font-size: 0.9rem; }
+        .delete-btn { background: #e50914; color: #fff; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 0.8rem; }
+        .delete-btn:hover { background: #b80710; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div id="dashboard">
-        <h2>👑 Admin Control</h2>
-        <div class="dashboard-grid">
-            <div class="dash-btn" onclick="openSection('secVideo')"><i class="fas fa-video"></i> <span>ভিডিও আপলোড</span></div>
-            <div class="dash-btn" onclick="openSection('secAds')"><i class="fas fa-sack-dollar"></i> <span>অ্যাড সেটআপ</span></div>
-            <div class="dash-btn" onclick="openSection('secCat')"><i class="fas fa-tags"></i> <span>ক্যাটাগরি</span></div>
-            <div class="dash-btn" onclick="openSection('secLinks')"><i class="fas fa-link"></i> <span>মেনু লিংক</span></div>
-            <div class="dash-btn" onclick="openSection('secSettings')"><i class="fas fa-cogs"></i> <span>সেটিংস</span></div>
-        </div>
-    </div>
-
-    <!-- 1. VIDEO UPLOAD -->
-    <div id="secVideo" class="section">
-        <div class="header-row"><button class="back-btn" onclick="goHome()"><i class="fas fa-arrow-left"></i></button><h3>🎬 ভিডিও আপলোড</h3><div></div></div>
-        <label class="help-text">নাম</label><input type="text" id="vTitle" placeholder="Video Title">
-        <label class="help-text">ছবি (URL)</label><input type="text" id="vImage" placeholder="https://...">
-        <label class="help-text">লিংক</label><input type="text" id="vLink" placeholder="Download link...">
-        <div style="display:flex; gap:10px;">
-            <select id="vCat" style="flex:1"><option value="all">Category</option></select>
-            <input type="number" id="vReq" value="1" style="flex:1" placeholder="Ads Count">
-        </div>
-        <button class="action-btn" onclick="uploadVideo()">PUBLISH VIDEO</button>
-        <div id="vList" style="margin-top:20px"></div>
-    </div>
-
-    <!-- 2. ADS SETUP (Updated for Monetag) -->
-    <div id="secAds" class="section">
-        <div class="header-row"><button class="back-btn" onclick="goHome()"><i class="fas fa-arrow-left"></i></button><h3>💰 অ্যাড সেটআপ</h3><div></div></div>
+    <div class="container">
+        <a href="index.html" class="home-btn"><i class="fa-solid fa-house"></i> মূল সাইটে যান</a>
+        <h2><i class="fa-solid fa-user-shield"></i> CineBD HD অ্যাডমিন ড্যাশবোর্ড</h2>
         
-        <div style="background:#252538; padding:10px; border-radius:10px; margin-bottom:15px; border:1px solid #ec4899;">
-            <h4 style="margin:0 0 10px; color:#ec4899;">🚀 Monetag (2nd Ad)</h4>
-            <label class="help-text">Zone ID (Example: 10110498)</label>
-            <input type="number" id="monetagId" placeholder="10110498">
-            <button class="action-btn" style="padding:8px;" onclick="saveMonetag()">Save Monetag ID</button>
+        <div class="section-box">
+            <div class="section-title">১. ক্যাটাগরি ম্যানেজমেন্ট</div>
+            <form id="category-form">
+                <div class="form-group">
+                    <label>নতুন ক্যাটাগরির নাম</label>
+                    <input type="text" id="cat-name" required placeholder="যেমন: Natok, Bollywood">
+                </div>
+                <button type="submit" class="btn">ক্যাটাগরি সেভ করুন</button>
+                <p id="cat-msg" class="success-msg"></p>
+            </form>
+            
+            <label style="margin-top: 15px;">বিদ্যমান ক্যাটাগরি সমূহ (ডিলিট করতে পারবেন):</label>
+            <div class="item-list" id="category-list">
+                <div style="color: #888; text-align: center; padding: 10px;">লোড হচ্ছে...</div>
+            </div>
         </div>
 
-        <div style="background:#252538; padding:10px; border-radius:10px; margin-bottom:15px;">
-            <h4 style="margin:0 0 10px; color:#fff;">Adsgram Block ID</h4>
-            <input type="text" id="adsgramId" placeholder="Example: 12345">
-            <button class="action-btn" style="padding:8px;" onclick="addAdsgramId()">Add ID</button>
-            <div id="adsgramList"></div>
+        <div class="section-box">
+            <div class="section-title">২. নতুন মুভি বা নাটক আপলোড করুন</div>
+            <form id="movie-form">
+                <div class="form-group">
+                    <label>কনটেন্টের শিরোনাম (Title)</label>
+                    <input type="text" id="m-title" required placeholder="মুভি বা নাটকের নাম">
+                </div>
+                
+                <div class="row">
+                    <div class="form-group">
+                        <label>ক্যাটাগরি সিলেক্ট করুন</label>
+                        <select id="m-category" required>
+                            <option value="">ক্যাটাগরি লোড হচ্ছে...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>কোয়ালিটি (Quality)</label>
+                        <input type="text" id="m-quality" required placeholder="যেমন: 1080p FHD">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>পোস্টার ইমেজ লিংক (Poster Image URL)</label>
+                    <input type="url" id="m-poster" required placeholder="ইমেজ লিংক দিন">
+                </div>
+
+                <div class="form-group">
+                    <label>টেলিগ্রাম চ্যানেল লিংক (Telegram Link)</label>
+                    <input type="url" id="m-telegram" placeholder="https://t.me/...">
+                </div>
+
+                <div class="form-group">
+                    <label><strong>1080p ডাউনলোড লিংকসমূহ</strong></label>
+                    <div class="row">
+                        <input type="url" id="p1080-index" placeholder="Index Link">
+                        <input type="url" id="p1080-gdx" placeholder="GDxShare Link">
+                    </div>
+                    <div class="row" style="margin-top: 8px;">
+                        <input type="url" id="p1080-terabox" placeholder="TeraBox Link">
+                        <input type="url" id="p1080-gofile" placeholder="Gofile Link">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label><strong>720p ডাউনলোড লিংকসমূহ</strong></label>
+                    <div class="row">
+                        <input type="url" id="p720-index" placeholder="Index Link">
+                        <input type="url" id="p720-gdx" placeholder="GDxShare Link">
+                    </div>
+                    <div class="row" style="margin-top: 8px;">
+                        <input type="url" id="p720-terabox" placeholder="TeraBox Link">
+                        <input type="url" id="p720-gofile" placeholder="Gofile Link">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label>স্ক্রিনশট ১ (Screenshot 1 URL)</label>
+                        <input type="url" id="m-ss1" placeholder="Image URL">
+                    </div>
+                    <div class="form-group">
+                        <label>স্ক্রিনশট ২ (Screenshot 2 URL)</label>
+                        <input type="url" id="m-ss2" placeholder="Image URL">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn" style="margin-top: 10px;">কনটেন্ট পাবলিশ করুন</button>
+                <p id="movie-msg" class="success-msg"></p>
+                <p id="movie-err" class="error-msg"></p>
+            </form>
         </div>
 
-        <div style="background:#252538; padding:10px; border-radius:10px;">
-            <h4 style="margin:0 0 10px; color:#a855f7;">Banner Ads (HTML)</h4>
-            <textarea id="bannerCode" style="height:60px" placeholder='<a href="..."><img src="..."></a>'></textarea>
-            <button class="action-btn" style="padding:8px;" onclick="addBanner()">Add Banner</button>
-            <div id="bannerList"></div>
+        <div class="section-box">
+            <div class="section-title">৩. আপলোডকৃত মুভি বা নাটক মুছুন (Delete Movies)</div>
+            <label>ওয়েবসাইটে থাকা কনটেন্ট লিস্ট:</label>
+            <div class="item-list" id="movie-list">
+                <div style="color: #888; text-align: center; padding: 10px;">লোড হচ্ছে...</div>
+            </div>
         </div>
     </div>
 
-    <!-- 3. CATEGORY -->
-    <div id="secCat" class="section">
-        <div class="header-row"><button class="back-btn" onclick="goHome()"><i class="fas fa-arrow-left"></i></button><h3>🏷️ ক্যাটাগরি</h3><div></div></div>
-        <input type="text" id="cId" placeholder="ID (viral)">
-        <input type="text" id="cName" placeholder="Name (ভাইরাল)">
-        <button class="action-btn" onclick="addCategory()">Add</button>
-        <div id="catList"></div>
-    </div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    <!-- 4. LINKS -->
-    <div id="secLinks" class="section">
-        <div class="header-row"><button class="back-btn" onclick="goHome()"><i class="fas fa-arrow-left"></i></button><h3>🔗 লিংক</h3><div></div></div>
-        <input type="text" id="lTitle" placeholder="Title">
-        <input type="text" id="lUrl" placeholder="URL">
-        <button class="action-btn" onclick="addLink()">Add</button>
-        <div id="linkList"></div>
-    </div>
+        const firebaseConfig = {
+            apiKey: "AIzaSyB1ZubF0ZPvtdhcWWBa2PGorU7lx0OkN4I",
+            authDomain: "admin-726ec.firebaseapp.com",
+            databaseURL: "https://admin-726ec-default-rtdb.firebaseio.com",
+            projectId: "admin-726ec",
+            storageBucket: "admin-726ec.firebasestorage.app",
+            messagingSenderId: "97796496921",
+            appId: "1:97796496921:web:4bf82701a35b6caca4d488",
+            measurementId: "G-Y8Y7S92HD0"
+        };
 
-    <!-- 5. SETTINGS -->
-    <div id="secSettings" class="section">
-        <div class="header-row"><button class="back-btn" onclick="goHome()"><i class="fas fa-arrow-left"></i></button><h3>⚙️ সেটিংস</h3><div></div></div>
-        <label class="help-text">Telegram Bot App Link (Direct Link)</label>
-        <input type="text" id="sBot" placeholder="https://t.me/your_bot/app">
-        <label class="help-text">Tutorial ID (Youtube)</label>
-        <input type="text" id="sTut">
-        <label class="help-text">Daily Limit</label>
-        <input type="number" id="sLimit">
-        <button class="action-btn" onclick="saveSettings()">Save</button>
-    </div>
-</div>
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-    import { getDatabase, ref, set, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
-
-    const firebaseConfig = {
-        
-
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-
-    window.openSection = (id) => { document.getElementById('dashboard').style.display='none'; document.querySelectorAll('.section').forEach(d=>d.classList.remove('active')); document.getElementById(id).classList.add('active'); }
-    window.goHome = () => { document.querySelectorAll('.section').forEach(d=>d.classList.remove('active')); document.getElementById('dashboard').style.display='block'; }
-    window.del = (path) => { if(confirm('Delete?')) remove(ref(db, path)); }
-
-    // VIDEO
-    window.uploadVideo = () => {
-        const t=document.getElementById('vTitle').value, i=document.getElementById('vImage').value, l=document.getElementById('vLink').value;
-        if(t&&i&&l) push(ref(db, 'videos'), { name:t, image_url:i, download_link:l, category:document.getElementById('vCat').value, ad_watches_required:parseInt(document.getElementById('vReq').value), created_at:Date.now() }).then(()=>alert('Done!'));
-    }
-    onValue(ref(db, 'videos'), s=>{ 
-        const d=document.getElementById('vList'); d.innerHTML=''; 
-        if(s.val()) Object.entries(s.val()).reverse().forEach(([k,v])=>d.innerHTML+=`<div class="list-item"><img src="${v.image_url}" width="30"> <span>${v.name}</span> <button class="del-btn" onclick="del('videos/${k}')">X</button></div>`); 
-    });
-
-    // ADS (Monetag Added)
-    window.saveMonetag = () => {
-        const mid = document.getElementById('monetagId').value;
-        update(ref(db, 'settings'), { monetag_id: mid }).then(()=>alert('Monetag ID Saved!'));
-    }
-    
-    window.addAdsgramId = () => { const v=document.getElementById('adsgramId').value; if(v) push(ref(db, 'ads_config/interstitial_ids'), v); }
-    onValue(ref(db, 'ads_config/interstitial_ids'), s=>{
-        const d=document.getElementById('adsgramList'); d.innerHTML='';
-        if(s.val()) Object.entries(s.val()).forEach(([k,v])=>d.innerHTML+=`<div class="list-item"><span>${v}</span><button class="del-btn" onclick="del('ads_config/interstitial_ids/${k}')">X</button></div>`);
-    });
-    window.addBanner = () => { const v=document.getElementById('bannerCode').value; if(v) push(ref(db, 'ads_config/banners'), v); }
-    onValue(ref(db, 'ads_config/banners'), s=>{
-        const d=document.getElementById('bannerList'); d.innerHTML='';
-        if(s.val()) Object.entries(s.val()).forEach(([k,v])=>d.innerHTML+=`<div class="list-item"><small>${v.substring(0,20)}...</small><button class="del-btn" onclick="del('ads_config/banners/${k}')">X</button></div>`);
-    });
-
-    // SETTINGS (Load Monetag)
-    window.saveSettings=()=>{ 
-        update(ref(db,'settings'),{
-            tutorial_id:document.getElementById('sTut').value, 
-            ads_limit:parseInt(document.getElementById('sLimit').value),
-            bot_app_link:document.getElementById('sBot').value
-        }).then(()=>alert('Settings Saved')); 
-    }
-    onValue(ref(db,'settings'),s=>{ 
-        if(s.val()){ 
-            document.getElementById('sTut').value=s.val().tutorial_id||''; 
-            document.getElementById('sLimit').value=s.val().ads_limit||20;
-            document.getElementById('sBot').value=s.val().bot_app_link||'';
-            document.getElementById('monetagId').value=s.val().monetag_id||'';
+        async function loadAdminData() {
+            await loadCategories();
+            await loadMoviesList();
         }
-    });
 
-    // OTHERS
-    window.addCategory=()=>{ const i=document.getElementById('cId').value,n=document.getElementById('cName').value; if(i&&n) push(ref(db,'filters'),{id:i,name:n}); }
-    onValue(ref(db,'filters'),s=>{
-        const d=document.getElementById('catList'), sel=document.getElementById('vCat'); d.innerHTML=''; sel.innerHTML='<option value="all">All</option>';
-        if(s.val()) Object.entries(s.val()).forEach(([k,v])=>{ d.innerHTML+=`<div class="list-item"><span>${v.name}</span><button class="del-btn" onclick="del('filters/${k}')">X</button></div>`; sel.innerHTML+=`<option value="${v.id}">${v.name}</option>`; });
-    });
-    window.addLink=()=>{ const t=document.getElementById('lTitle').value,u=document.getElementById('lUrl').value; if(t&&u) push(ref(db,'links'),{title:t,url:u}); }
-    onValue(ref(db,'links'),s=>{ const d=document.getElementById('linkList'); d.innerHTML=''; if(s.val()) Object.entries(s.val()).forEach(([k,v])=>d.innerHTML+=`<div class="list-item"><span>${v.title}</span><button class="del-btn" onclick="del('links/${k}')">X</button></div>`); });
-</script>
+        async function loadCategories() {
+            try {
+                const querySnapshot = await getDocs(collection(db, "categories"));
+                const select = document.getElementById('m-category');
+                const catListDiv = document.getElementById('category-list');
+                
+                select.innerHTML = '<option value="">ক্যাটাগরি সিলেক্ট করুন</option>';
+                catListDiv.innerHTML = '';
+
+                if(querySnapshot.empty) {
+                    catListDiv.innerHTML = '<div style="color: #888; text-align: center; padding: 10px;">কোনো ক্যাটাগরি নেই</div>';
+                    return;
+                }
+
+                querySnapshot.forEach((docSnap) => {
+                    const cat = docSnap.data().name;
+                    const catId = docSnap.id;
+                    
+                    select.innerHTML += `<option value="${cat}">${cat}</option>`;
+                    
+                    catListDiv.innerHTML += `
+                        <div class="item-row">
+                            <span>${cat}</span>
+                            <button class="delete-btn" onclick="deleteCategory('${catId}')"><i class="fa-solid fa-trash"></i> ডিলিট</button>
+                        </div>
+                    `;
+                });
+            } catch (err) {
+                console.error("Category Load Error:", err);
+            }
+        }
+
+        async function loadMoviesList() {
+            try {
+                const querySnapshot = await getDocs(collection(db, "movies"));
+                const movieListDiv = document.getElementById('movie-list');
+                movieListDiv.innerHTML = '';
+
+                if(querySnapshot.empty) {
+                    movieListDiv.innerHTML = '<div style="color: #888; text-align: center; padding: 10px;">কোনো মুভি বা নাটক আপলোড করা হয়নি</div>';
+                    return;
+                }
+
+                querySnapshot.forEach((docSnap) => {
+                    const movie = docSnap.data();
+                    const movieId = docSnap.id;
+
+                    movieListDiv.innerHTML += `
+                        <div class="item-row">
+                            <span><b>${movie.title}</b> (${movie.category})</span>
+                            <button class="delete-btn" onclick="deleteMovie('${movieId}')"><i class="fa-solid fa-trash"></i> ডিলিট</button>
+                        </div>
+                    `;
+                });
+            } catch (err) {
+                console.error("Movie Load Error:", err);
+            }
+        }
+
+        window.deleteCategory = async function(id) {
+            if(confirm('আপনি কি নিশ্চিত এই ক্যাটাগরি ডিলিট করতে চান?')) {
+                try {
+                    await deleteDoc(doc(db, "categories", id));
+                    loadAdminData();
+                    alert('ক্যাটাগরি সফলভাবে ডিলিট করা হয়েছে!');
+                } catch(err) {
+                    alert('ডিলিট করতে সমস্যা হয়েছে: ' + err.message);
+                }
+            }
+        }
+
+        window.deleteMovie = async function(id) {
+            if(confirm('আপনি কি নিশ্চিত এই কনটেন্ট ডিলিট করতে চান?')) {
+                try {
+                    await deleteDoc(doc(db, "movies", id));
+                    loadAdminData();
+                    alert('কনটেন্ট সফলভাবে ডিলিট করা হয়েছে!');
+                } catch(err) {
+                    alert('ডিলিট করতে সমস্যা হয়েছে: ' + err.message);
+                }
+            }
+        }
+
+        document.getElementById('category-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const catName = document.getElementById('cat-name').value.trim();
+            try {
+                await addDoc(collection(db, "categories"), { name: catName });
+                document.getElementById('cat-msg').innerText = 'সফলভাবে ক্যাটাগরি যোগ করা হয়েছে!';
+                document.getElementById('cat-name').value = '';
+                loadAdminData();
+                setTimeout(() => document.getElementById('cat-msg').innerText = '', 3000);
+            } catch (err) {
+                alert('ত্রুটি: ' + err.message);
+            }
+        });
+
+        document.getElementById('movie-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            document.getElementById('movie-err').innerText = '';
+            
+            const movieData = {
+                title: document.getElementById('m-title').value,
+                category: document.getElementById('m-category').value,
+                quality: document.getElementById('m-quality').value,
+                poster: document.getElementById('m-poster').value,
+                telegram: document.getElementById('m-telegram').value,
+                p1080: {
+                    index: document.getElementById('p1080-index').value,
+                    gdx: document.getElementById('p1080-gdx').value,
+                    terabox: document.getElementById('p1080-terabox').value,
+                    gofile: document.getElementById('p1080-gofile').value
+                },
+                p720: {
+                    index: document.getElementById('p720-index').value,
+                    gdx: document.getElementById('p720-gdx').value,
+                    terabox: document.getElementById('p720-terabox').value,
+                    gofile: document.getElementById('p720-gofile').value
+                },
+                ss1: document.getElementById('m-ss1').value,
+                ss2: document.getElementById('m-ss2').value,
+                timestamp: new Date()
+            };
+
+            try {
+                await addDoc(collection(db, "movies"), movieData);
+                document.getElementById('movie-msg').innerText = 'সফলভাবে মুভি/নাটক আপলোড করা হয়েছে!';
+                document.getElementById('movie-form').reset();
+                loadAdminData();
+                setTimeout(() => document.getElementById('movie-msg').innerText = '', 3000);
+            } catch (err) {
+                document.getElementById('movie-err').innerText = 'আপলোড ব্যর্থ হয়েছে: ' + err.message;
+            }
+        });
+
+        loadAdminData();
+    </script>
 </body>
 </html>
